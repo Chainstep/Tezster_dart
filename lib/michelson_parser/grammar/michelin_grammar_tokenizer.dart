@@ -9,7 +9,7 @@ class MichelinGrammarTokenizer {
   var line;
   var lastLineBreak;
 
-  MichelinGrammarTokenizer(this.delimiters) : super();
+  MichelinGrammarTokenizer(this.delimiters) : index = 0, super();
 
   feed(String text) {
     tokenize(text);

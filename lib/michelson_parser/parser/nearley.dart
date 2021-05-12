@@ -6,7 +6,7 @@ import 'package:tezster_dart/michelson_parser/grammar/michelson_grammar_tokenize
 var fail = {};
 
 class Nearley {
-  NearleyGrammar grammar;
+  NearleyGrammar ?grammar;
   var options;
 
   var lexer;
@@ -16,6 +16,8 @@ class Nearley {
   int current;
   var results;
 
+  Nearley() : current = 0 {}
+
   static NearleyGrammar fromCompiled(Map<String, dynamic> rules, {start}) {
     var lexer = rules['Lexer'];
     start = rules['ParserStart'];
@@ -23,7 +25,7 @@ class Nearley {
     var _rules = redefinedRules.map<Rule>((r) {
       return (new Rule(r['name'], r['symbols'], r['postprocess']));
     }).toList();
-    var g = NearleyGrammar(_rules, start);
+    var g = NearleyGrammar(rules: _rules, start: start);
     g.lexer = lexer;
     return g;
   }
@@ -33,15 +35,15 @@ class Nearley {
 
     options = {
       'keepHistory': false,
-      'lexer': grammar.lexer ?? new StreamLexer(),
+      'lexer': grammar?.lexer ?? new StreamLexer(),
     };
 
     lexer = options['lexer'];
     lexerState = null;
 
-    var column = new Column(grammar, 0);
-    column.wants[grammar.start] = [];
-    column.predict(grammar.start);
+    var column = new Column(grammar!, 0);
+    column.wants[grammar?.start] = [];
+    column.predict(grammar?.start);
     column.process();
     table = [column];
     current = 0;
@@ -60,7 +62,7 @@ class Nearley {
       if (current != 0) table[current - 1] = null;
 
       var n = current + 1;
-      var nextColumn = new Column(grammar, n);
+      var nextColumn = new Column(grammar!, n);
 
       var literal = token['text'] != null ? token['text'] : token['value'];
       var value = lexer is StreamLexer ? token['value'] : token;
@@ -109,7 +111,7 @@ class Nearley {
 
   finish() {
     var considerations = [];
-    var start = this.grammar.start;
+    var start = this.grammar?.start;
     var column = this.table[this.table.length - 1];
     column.states.forEach((t) {
       if (t.rule.name == start &&
@@ -279,11 +281,12 @@ class Column {
   List<ColumnState> scannable;
   Map completed;
 
-  Column(this.grammar, this.index) {
-    states = [];
-    wants = {};
-    scannable = [];
-    completed = {};
+  Column(this.grammar, this.index) :
+    states = [],
+    wants = {},
+    scannable = [],
+    completed = {}
+  {
   }
 
   void predict(exp) {
@@ -356,11 +359,12 @@ class ColumnState {
   var wantedBy;
   var isComplete;
 
-  ColumnState left;
+  ColumnState ?left;
   var right;
 
-  ColumnState(this.rule, this.dot, this.reference, this.wantedBy) {
-    data = [];
+  ColumnState(this.rule, this.dot, this.reference, this.wantedBy) :
+    data = []
+  {
     isComplete = dot == rule.symbols.length;
   }
 
@@ -387,11 +391,11 @@ class ColumnState {
   List build() {
     var children = [];
     var node = this;
-    do {
+    while (node.left != null) {
       children.add(
           node.right is ColumnState ? node.right.data : node.right['data']);
-      node = node.left;
-    } while (node.left != null);
+      node = node.left!;
+    }
     children = children.reversed.toList();
     return children;
   }
@@ -401,7 +405,7 @@ class NearleyError {
   var error;
   int offset;
   var token;
-  NearleyError(this.error);
+  NearleyError(this.error): offset=0;
 }
 
 class NearleyGrammar {
@@ -411,7 +415,7 @@ class NearleyGrammar {
   var lexer;
   var byName;
 
-  NearleyGrammar(this.rules, this.start) {
+  NearleyGrammar({required this.rules, required this.start}) {
     this.rules = rules;
     this.start = start ?? this.rules[0].name;
     var byName = this.byName = {};
@@ -462,7 +466,7 @@ class StreamLexer {
   var line;
   var lastLineBreak;
 
-  StreamLexer() {
+  StreamLexer() : index = 0 {
     this.reset("");
   }
 
@@ -503,7 +507,7 @@ class StreamLexer {
           " col " +
           col.toString() +
           ":\n\n";
-      var msg = List();
+      var msg = List.empty();
       for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         msg.add(

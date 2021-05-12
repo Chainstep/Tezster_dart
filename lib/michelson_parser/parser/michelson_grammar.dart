@@ -2,7 +2,7 @@
 import 'package:tezster_dart/michelson_parser/grammar/michelson_grammar_tokenizer.dart';
 
 class MichelsonGrammar {
-  MichelsonGrammarTokenizer lexer;
+  late MichelsonGrammarTokenizer lexer;
 
   var macroCADRconst = 'C[AD]+R';
   var macroSETCADRconst = 'SET_C[AD]+R';

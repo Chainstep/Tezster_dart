@@ -15,10 +15,10 @@ class SoftSigner {
   var _key;
 
   SoftSigner(
-      {Uint8List secretKey,
+      {required Uint8List secretKey,
       int validity = -1,
       String passphrase = '',
-      Uint8List salt}) {
+        Uint8List ?salt}) {
     this._secretKey = secretKey;
     this._lockTimout = validity;
     this._passphrase = passphrase;

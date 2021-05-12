@@ -322,7 +322,7 @@ class TezosNodeWriter {
   static injectOperation(String server, Map<String, Object> opPair,
       {chainid = 'main'}) async {
     var response = await HttpHelper.performPostRequest(server,
-        'injection/operation?chain=$chainid', hex.encode(opPair['bytes']));
+        'injection/operation?chain=$chainid', hex.encode(opPair['bytes'] as List<int>));
     response = response.toString().replaceAll('"', '');
     return response;
   }

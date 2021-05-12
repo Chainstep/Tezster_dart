@@ -3,7 +3,7 @@ import 'dart:io';
 
 class HttpHelper {
   static Future<dynamic> performPostRequest(server, command, payload,
-      {Map<String, String> headers}) async {
+      {Map<String, String> ?headers}) async {
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(
         command.isEmpty ? Uri.parse(server) : Uri.parse('$server/$command'));

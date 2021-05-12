@@ -3,10 +3,10 @@ import 'package:tezster_dart/types/tezos/query_types.dart';
 class ConseilQueryBuilder {
   static blankQuery() {
     return {
-      'fields': new List(),
-      'predicates': new List(),
-      'orderBy': new List(),
-      'aggregation': new List(),
+      'fields': List.empty(),
+      'predicates': List.empty(),
+      'orderBy': List.empty(),
+      'aggregation': List.empty(),
       'limit': 100
     };
   }

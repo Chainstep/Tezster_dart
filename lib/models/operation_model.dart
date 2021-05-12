@@ -18,21 +18,23 @@ class OperationModel {
   String pkh;
   String secret;
 
+  static const Map<String, Object> EMPTY_MAP = {};
+
   OperationModel({
-    this.destination,
-    this.amount,
-    this.counter,
-    this.fee,
-    this.source,
+    this.destination = '',
+    this.amount = '',
+    this.counter = 0,
+    this.fee = '',
+    this.source = '',
     this.kind = 'transaction',
     this.gasLimit = TezosConstants.DefaultTransactionGasLimit,
     this.storageLimit = TezosConstants.DefaultTransactionStorageLimit,
-    this.publicKey,
-    this.delegate,
-    this.script,
-    this.pkh,
-    this.secret,
-  }) {
+    this.publicKey = '',
+    this.delegate = '',
+    this.script = EMPTY_MAP,
+    this.pkh = '',
+    this.secret = '',
+  }) : parameters = {} {
     if (kind == 'delegation') {
       gasLimit = TezosConstants.DefaultDelegationGasLimit;
       storageLimit = TezosConstants.DefaultDelegationStorageLimit;

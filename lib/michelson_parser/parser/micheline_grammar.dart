@@ -2,7 +2,7 @@
 import 'package:tezster_dart/michelson_parser/grammar/michelin_grammar_tokenizer.dart';
 
 class MichelineGrammar {
-  MichelinGrammarTokenizer lexer;
+  late MichelinGrammarTokenizer lexer;
   var lbrace, _, colon, quotedValue, rbrace, comma, lbracket, rbracket;
   final List defaultMichelsonKeywords = [
     '"parameter"',
@@ -124,7 +124,7 @@ class MichelineGrammar {
     '"chain_id"',
     '"CHAIN_ID"'
   ];
-  List languageKeywords;
+  late List languageKeywords;
 
   MichelineGrammar() {
     languageKeywords = defaultMichelsonKeywords;

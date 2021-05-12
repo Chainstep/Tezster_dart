@@ -8,7 +8,7 @@ class MichelsonGrammarTokenizer {
   var line;
   var lastLineBreak;
 
-  MichelsonGrammarTokenizer(this.delimiters) : super();
+  MichelsonGrammarTokenizer(this.delimiters) : index = 0, super();
 
   feed(String text) {
     tokenize(text);
@@ -192,7 +192,7 @@ class GrammarResultModel {
   String value;
   int columnNumber;
 
-  GrammarResultModel(this.type, this.value);
+  GrammarResultModel(this.type, this.value) : columnNumber = 0;
 
   toJson() => {'type': type, 'value': value};
 }

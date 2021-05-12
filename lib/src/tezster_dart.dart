@@ -28,7 +28,7 @@ class TezsterDart {
   }
 
   static Future<List<String>> getKeysFromMnemonic({
-    String mnemonic,
+    required String mnemonic,
   }) async {
     assert(mnemonic != null);
     Uint8List seed = bip39.mnemonicToSeed(mnemonic);
@@ -41,8 +41,8 @@ class TezsterDart {
   }
 
   static Future<List<String>> getKeysFromMnemonicAndPassphrase({
-    String mnemonic,
-    String passphrase,
+    required String mnemonic,
+    required String passphrase,
   }) async {
     assert(mnemonic != null);
     assert(passphrase != null);
@@ -53,8 +53,8 @@ class TezsterDart {
   }
 
   static Future<List<String>> unlockFundraiserIdentity({
-    String mnemonic,
-    String email,
+    required String mnemonic,
+    required String email,
     String passphrase = "",
   }) async {
     assert(mnemonic != null);
@@ -67,8 +67,8 @@ class TezsterDart {
   }
 
   static Future<List<String>> signOperationGroup({
-    String privateKey,
-    String forgedOperation,
+    required String privateKey,
+    required String forgedOperation,
   }) async {
     assert(privateKey != null);
     assert(forgedOperation != null);
@@ -76,7 +76,7 @@ class TezsterDart {
     List<int> hexStringToListOfInt =
         hex.decode(watermarkedForgedOperationBytesHex);
     Uint8List hashedWatermarkedOpBytes =
-        Blake2bHash.hashWithDigestSize(256, hexStringToListOfInt);
+        Blake2bHash.hashWithDigestSize(256, Uint8List.fromList(hexStringToListOfInt));
     Uint8List privateKeyBytes = bs58check.decode(privateKey);
     List<int> pkB = List.from(privateKeyBytes);
     pkB.removeRange(0, 4);
@@ -87,14 +87,14 @@ class TezsterDart {
     );
     String opSignatureHex = hex.encode(value);
     String hexStringToEncode = '09f5cd8612' + opSignatureHex;
-    Uint8List hexDeco = hex.decode(hexStringToEncode);
+    Uint8List hexDeco = Uint8List.fromList(hex.decode(hexStringToEncode));
     String hexSignature = bs58check.encode(hexDeco);
     String signedOpBytes = forgedOperation + opSignatureHex;
     return [hexSignature, signedOpBytes];
   }
 
   static Future<List<String>> _unlockKeys({
-    String mnemonic,
+    required String mnemonic,
     String passphrase = "",
     String email = "",
   }) async {
@@ -112,7 +112,7 @@ class TezsterDart {
     List<int> normalizedPassphrase = stringNormalize("$email" + "$passphrase");
     String normString = String.fromCharCodes(normalizedPassphrase);
     String p = "mnemonic" + normString;
-    Uint8List seed = PBKDF2(hashAlgorithm: sha512).generateKey(m, p, 2048, 32);
+    Uint8List seed = Uint8List.fromList(PBKDF2(hashAlgorithm: sha512).generateKey(m, p, 2048, 32));
     KeyPair keyPair = Sodium.cryptoSignSeedKeypair(seed);
     String skKey = GenerateKeys.readKeysWithHint(keyPair.sk, '2bf64e07');
     String pkKey = GenerateKeys.readKeysWithHint(keyPair.pk, '0d0f25d9');

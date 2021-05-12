@@ -10,12 +10,12 @@ class KeyStoreModel {
   String secret;
 
   KeyStoreModel({
-    this.publicKey,
-    this.secretKey,
-    @required this.publicKeyHash,
+    required this.publicKey,
+    required this.secretKey,
+    required this.publicKeyHash,
     this.seed,
-    this.secret,
-    this.email,
-    this.password,
+    this.secret = '',
+    this.email = '',
+    this.password = '',
   });
 }
